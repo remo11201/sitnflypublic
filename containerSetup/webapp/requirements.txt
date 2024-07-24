@@ -1,0 +1,6 @@
+django
+gunicorn
+django-simple-captcha
+python-decouple
+django-admin-logs
+mysqlclient

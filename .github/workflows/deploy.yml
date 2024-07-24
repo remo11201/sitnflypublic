@@ -1,0 +1,79 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - development
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Install dependencies
+      run: |
+        echo "Setting up Python environment and installing dependencies..."
+        python -m venv venv
+        . venv/bin/activate
+        pip install -r requirements.txt
+        echo "Dependencies installed."
+
+    - name: Run tests
+      env:
+          DATABASE_URL: postgres://user:password@localhost:5432/test_db
+          SECRET_KEY: "dummysecretkeyforci"
+          EMAIL_HOST: "smtp.gmail.com"
+          EMAIL_PORT: "587"
+          EMAIL_HOST_USER: "sitnfly@gmail.com"
+          EMAIL_HOST_PASSWORD: "FakePasswordlol"
+          DB_ENGINE: "django.db.backends.mysql"
+          DB_NAME: "Booking"
+          DB_USER: "NotARealuser"
+          DB_PASSWORD: "passwordlool"
+          DB_HOST: "127.0.0.01"
+          DB_PORT: "1111"
+      run: |
+        echo "Running tests..."
+        . venv/bin/activate
+        cd containerSetup/sitnfly
+        python manage.py test backend.tests
+        echo "Tests completed."
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Add remote host to known_hosts
+      run: |
+        echo "Adding remote host to known_hosts..."
+        ssh-keyscan -H 3.145.122.51 >> ~/.ssh/known_hosts
+        echo "Remote host added."
+
+    - name: Copy files via rsync
+      run: |
+        rsync -avz --exclude-from='./.scpignore' . virtualjoke@3.145.122.51:/home/virtualjoke/deployment
+
+    - name: Connect via SSH and deploy
+      run: |
+        ssh -o StrictHostKeyChecking=no virtualjoke@3.145.122.51 << 'EOF'
+        set -e
+        cd /home/virtualjoke/deployment/containerSetup
+        echo "Stopping containers..."
+        docker system prune -f
+        docker-compose down -v
+        docker-compose build --no-cache 
+        docker-compose up -d --force-recreate 
+        echo "Listing running containers..."
+        docker ps
+        echo "Deployment complete!"
+        EOF

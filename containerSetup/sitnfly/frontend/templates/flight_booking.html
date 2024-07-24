@@ -1,0 +1,34 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+  <h1 style="padding-top: 20px;">Book Seats for Flight {{ flight.flight_number }}</h1>
+  <p>Select your preferred seats:</p>
+
+  <form method="post" action="{% url 'flight_booking' flight_id=flight.flight_id %}">
+    {% csrf_token %}
+    <div class="row">
+      {% for seat in available_seats %}
+      <div class="col-md-3 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ seat.seat_no }}</h5>
+            <p class="card-text">{{ seat.seat_class }}</p>
+            <p class="card-text">Price: <span class="badge bg-primary rounded-pill">${{ seat.price }}</span></p>
+            <input type="checkbox" id="seat_{{ seat.pk }}" name="seat_ids" value="{{ seat.pk }}">
+            <label for="seat_{{ seat.pk }}">Select</label>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col">
+        <p>No seats available for booking.</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Book Selected Seats</button>
+  </form>
+</div>
+{% endblock %}

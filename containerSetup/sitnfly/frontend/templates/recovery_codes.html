@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recovery Codes</title>
+</head>
+<body>
+    <h2>Your Recovery Codes</h2>
+    <p>Store these codes in a safe place. Each code can be used only once.</p>
+    <ul>
+        {% for code in codes %}
+            <li>{{ code }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'verify_2fa' %}">Continue to Verification</a>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<main class="setup-2fa layout" style="margin-top: 100px;">
+  <div class="container">
+    <div class="layout__box">
+      <div class="layout__boxHeader">
+        <div class="layout__boxTitle">
+          <h3>Setup Two-Factor Authentication</h3>
+        </div>
+      </div>
+      <div class="layout__body">
+        {% if messages %}
+          <ul class="messages">
+            {% for message in messages %}
+              <li class="{{ message.tags }}">
+                {{ message }}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        <form class="form" action="{% url 'setup_2fa_email' %}" method="POST">
+          {% csrf_token %}
+          <div class="form__group">
+            <label for="passwordInput">Enter Your Password</label>
+            <input type="password" id="passwordInput" name="password" class="form-control" placeholder="Password" required>
+          </div>
+          <div class="form__action">
+            <button class="btn btn--main" type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

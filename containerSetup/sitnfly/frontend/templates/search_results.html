@@ -1,0 +1,34 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<main class="layout layout--3">
+  <div class="container">
+
+    <!-- Flight List Start -->
+    <div class="flightList">
+      <div class="flightList__header">
+        <div>
+          <h2>Flight Search Results</h2>
+          {% if query %}
+            <p>Showing results for "{{ query }}"</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="flightList__content">
+        <ul>
+          {% for flight in flights %}
+            <li>{{ flight.flight_number }} - {{ flight.origin }} to {{ flight.destination }}</li>
+          {% empty %}
+            <li>No flights found.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <!-- Flight List End -->
+
+  </div>
+</main>
+
+{% endblock %}

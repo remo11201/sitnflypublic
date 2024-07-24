@@ -1,0 +1,27 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<main class="auth layout">
+  <div class="container">
+    <div class="layout__box">
+      <div class="layout__boxHeader">
+        <div class="layout__boxTitle">
+          <h3>Send verification code via Email</h3>
+        </div>
+      </div>
+      <div class="layout__body">
+        <form method="POST">
+          {% csrf_token %}
+          <!-- Display any form errors -->
+          {% if messages %}
+            {% for message in messages %}
+              <div>{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+          <button type="submit">Send Verification Code</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

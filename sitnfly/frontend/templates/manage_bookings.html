@@ -1,0 +1,45 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<div class = container>
+    <div class = header-container>
+        <h1 class="booking-header">Your Bookings</h1>
+    </div>
+    <div class = table-container>
+        <table class="booking-table">
+            <thead>
+                <tr class="booking-row-header">
+                    <th>Flight Number</th>
+                    <th>Departure Time</th>
+                    <th>Arrival Time</th>
+                    <th>Origin</th>
+                    <th>Destination</th>
+                    <th>Airline Name</th>
+                    <th>Seat Number</th>
+                    <th>Seat Class</th>
+                    <th>Reservation Status</th>
+                    <th>Payment Status</th>
+                    <th>Booking Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in booking_details %}
+                    <tr class="booking-row">
+                        <td>{{ booking.flight_number }}</td>
+                        <td>{{ booking.departure_time }}</td>
+                        <td>{{ booking.arrival_time }}</td>
+                        <td>{{ booking.origin }}</td>
+                        <td>{{ booking.destination }}</td>
+                        <td>{{ booking.airline_name }}</td>
+                        <td>{{ booking.seat_number }}</td>
+                        <td>{{ booking.seat_class }}</td>
+                        <td>{{ booking.reservation_status }}</td>
+                        <td>{{ booking.payment_status }}</td>
+                        <td>{{ booking.booking_date }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div> 
+{% endblock %}

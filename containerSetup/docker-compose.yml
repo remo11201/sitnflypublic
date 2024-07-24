@@ -1,0 +1,68 @@
+services:
+  nginx:
+    image: jwilder/nginx-proxy:latest
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - /home/virtualjoke/jenkins-nginx/customNginx.conf:/etc/nginx/nginx.conf:ro
+      - ./vhost.d:/etc/nginx/vhost.d
+      - ./html:/usr/share/nginx/html
+      - /home/virtualjoke/jenkins-nginx/certs:/etc/nginx/certs:ro
+      - webapp_static:/app/staticfiles:ro
+    networks:
+      jenkins_network:
+        ipv4_address: 172.18.0.3
+
+  jenkins:
+    image: jenkins/jenkins:lts  # Use the official Jenkins image
+    container_name: jenkins
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    environment:
+      - VIRTUAL_HOST=sitnfly.uk,www.sitnfly.uk
+      - VIRTUAL_PORT=8080
+      - LETSENCRYPT_HOST=sitnfly.uk,www.sitnfly.uk
+      - LETSENCRYPT_EMAIL=your-email@example.com
+      - JENKINS_OPTS=--prefix=/jenkins
+    volumes:
+      - /home/virtualjoke/jenkins_home_temp:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock  # Bind mount the Docker socket
+    networks:
+      jenkins_network:
+        ipv4_address: 172.18.0.2
+
+
+  webapp:
+    build:
+      context: .
+      dockerfile: webapp/Dockerfile
+    container_name: webapp
+    environment:
+      - VIRTUAL_HOST=sitnfly.uk,www.sitnfly.uk
+      - VIRTUAL_PORT=8000
+      - LETSENCRYPT_HOST=sitnfly.uk,www.sitnfly.uk
+      - LETSENCRYPT_EMAIL=your-email@example.com
+    volumes:
+      - webapp_data:/app
+      - webapp_static:/app/staticfiles
+    expose:
+      - "8000"
+    networks:
+      jenkins_network:
+        ipv4_address: 172.18.0.4
+
+volumes:
+  webapp_data:
+  webapp_static:
+
+networks:
+  jenkins_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
+          gateway: 172.18.0.1

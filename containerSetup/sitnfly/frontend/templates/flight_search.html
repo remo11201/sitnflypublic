@@ -1,0 +1,116 @@
+{% extends 'main.html' %}
+
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha256-3gQJhtmj7YnV1fmtbVcnAV6eI4ws0Tr48bVZCThtCGQ=" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'styles/search.css' %}">
+
+  <div class="container">
+    <h1 style="padding-top: 20px; padding-bottom: 10px;">Search Flights</h1>
+    <div class="search-form">
+      {% if error_message %}
+      <p class="alert alert-danger">{{ error_message }}</p>
+      {% endif %}
+      <form action="{% url 'flight_search' %}" method="GET" class="flight-search-form">
+        <div class="row">
+          <div class="form-group col-md">
+            <label for="origin">From</label>
+            <select class="form-select" id="origin" name="origin">
+              <option value="" {% if not origin %}selected{% endif %}>Select Origin</option>
+              {% for o in origins %}
+              <option value="{{ o }}" {% if origin == o %}selected{% endif %}>{{ o }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group col-md">
+            <label for="destination">To</label>
+            <select class="form-select" id="destination" name="destination">
+              <option value="" {% if not destination %}selected{% endif %}>Select Destination</option>
+              {% for d in destinations %}
+              <option value="{{ d }}" {% if destination == d %}selected{% endif %}>{{ d }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group col-md">
+            <label for="seat_class">Seat Class</label>
+            <select class="form-select" id="seat_class" name="seat_class">
+              <option value="Economy" {% if seat_class == 'Economy' %}selected{% endif %}>Economy</option>
+              <option value="Business" {% if seat_class == 'Business' %}selected{% endif %}>Business</option>
+              <option value="First" {% if seat_class == 'First' %}selected{% endif %}>First</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md">
+            <label for="depart_date">Depart Date</label>
+            <input type="date" class="form-control" id="depart_date" name="depart_date"
+              value="{{ depart_date }}">
+          </div>
+          <div class="form-group col-md">
+            <label for="return_date">Return Date</label>
+            <input type="date" class="form-control" id="return_date" name="return_date"
+              value="{{ return_date }}">
+          </div>
+        </div>
+        <div class="row">
+          <button type="submit" class="btn btn-primary d-block mx-auto" style="font-size: 14px;">Search Flights</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="container">
+    {% if flights %}
+    <div class="flight-results mt-4">
+      <h2>Search Results</h2>
+      <div class="row">
+        {% for flight in flights %}
+        <div class="col-md mb-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <div class="flight-info">
+                <p><strong>Flight Number:</strong> {{ flight.flight_number }}</p>
+                <p><strong>From:</strong> {{ flight.origin }}</p>
+                <p><strong>To:</strong> {{ flight.destination }}</p>
+                <p><strong>Departure Time:</strong> {{ flight.departure_time }}</p>
+                <p><strong>Arrival Time:</strong> {{ flight.arrival_time }}</p>
+                <p><strong>Seats:</strong></p>
+                <ul>
+                  {% for seat in flight.seats.all %}
+                  {% if seat.seat_class == seat_class and seat.availability %}
+                  <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Seat Information</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ seat.seat_no }} - {{ seat.seat_class }}
+                                <span class="badge bg-primary rounded-pill">${{ seat.price }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                  {% endif %}
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+            <div class="card-footer">
+              <a href="{% url 'flight_booking' flight.flight_id %}" class="btn btn-primary btn-block">Book Now</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% else %}
+    <div class="no-results">
+      {% if origin or destination or depart_date or return_date or seat_class %}
+      <p>No flights found matching your criteria.</p>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+  
+
+{% endblock %}

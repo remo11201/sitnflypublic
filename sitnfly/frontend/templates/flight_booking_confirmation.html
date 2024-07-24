@@ -1,0 +1,46 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+  <h1 style="padding-top: 20px;">Booking Confirmation</h1>
+  <div class="card mt-4">
+    <div class="card-body">
+      <h2 class="card-title">Flight Details</h2>
+      <p class="card-text"><strong>Flight Number:</strong> {{ flight.flight_number }}</p>
+      <p class="card-text"><strong>Departure:</strong> {{ flight.departure_time }}</p>
+      <p class="card-text"><strong>Arrival:</strong> {{ flight.arrival_time }}</p>
+    </div>
+  </div>
+
+  <div class="card mt-4">
+    <div class="card-body">
+      <h2 class="card-title">Selected Seats</h2>
+      <ul class="list-group list-group-flush">
+        {% for seat in selected_seats %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          {{ seat.seat_no }} - {{ seat.seat_class }}
+          <span class="badge bg-primary rounded-pill">${{ seat.price }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="card mt-4">
+    <div class="card-body">
+      <h2 class="card-title">Total Price</h2>
+      <p class="card-text display-6">${{ total_price }}</p>
+      <form method="post" action="{% url 'payment' %}">
+        {% csrf_token %}
+        <input type="hidden" name="flight_id" value="{{ flight.flight_id }}">
+        {% for seat_id in selected_seat_ids %}
+        <input type="hidden" name="seat_ids" value="{{ seat_id }}">
+        {% endfor %}
+        <button type="submit" class="btn btn-primary btn-lg w-100">Proceed to Payment</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

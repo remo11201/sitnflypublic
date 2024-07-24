@@ -1,0 +1,41 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<main class="auth layout">
+  <div class="container">
+    <div class="layout__box">
+      <div class="layout__boxHeader">
+        <div class="layout__boxTitle">
+          <h3>Verify Two-Factor Authentication via Email</h3>
+        </div>
+      </div>
+      <div class="layout__body">
+        <form method="POST">
+          {% csrf_token %}
+      
+          {% comment %} <div class=" form__group">
+            <input type="text" name="verification_code" placeholder="Enter verification code">
+          </div>
+
+          <button type="submit">Verify</button> {% endcomment %}
+
+          <label for="verification_code">Enter Verification Code:</label>
+          <input type="text" name="verification_code" id="verification_code" required>
+          <button type="submit">Verify</button>
+        </form>
+        <form method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="resend_verification_code" value="true">
+          <button type="submit">Resend Verification Code</button>
+        </form>    
+        <!-- Display any form errors -->
+        {% if messages %}
+          {% for message in messages %}
+            <div>{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

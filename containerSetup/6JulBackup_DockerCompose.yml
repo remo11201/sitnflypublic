@@ -1,0 +1,48 @@
+# As backup to rollback in the event container setup goes wrong
+version: '3.8'
+
+services:
+  nginx:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs:ro
+      - ./vhost.d:/etc/nginx/vhost.d
+      - ./html:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    environment:
+      - VIRTUAL_HOST=sitnfly.uk,www.sitnfly.uk
+      - VIRTUAL_PORT=8080
+      - LETSENCRYPT_HOST=sitnfly.uk,www.sitnfly.uk
+      - LETSENCRYPT_EMAIL=your-email@example.com
+      - JENKINS_OPTS=--prefix=/jenkins
+    volumes:
+      - /home/virtualjoke/jenkins_home_temp:/var/jenkins_home
+
+  webapp:
+    image: nginx
+    container_name: webapp
+    environment:
+      - VIRTUAL_HOST=sitnfly.uk,www.sitnfly.uk
+      - VIRTUAL_PORT=8000
+      - LETSENCRYPT_HOST=sitnfly.uk,www.sitnfly.uk
+      - LETSENCRYPT_EMAIL=your-email@example.com
+    volumes:
+      - webapp_data:/var/www/html
+    expose:
+      - "8000"
+
+volumes:
+  jenkins_home:
+  webapp_data:

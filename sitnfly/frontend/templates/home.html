@@ -1,0 +1,66 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<main class="layout container py-5">
+
+    <section class="hero text-center mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 mb-4">Welcome to SIT N' FLY</h1>
+                <p class="lead">Book your flights with ease and convenience.</p>
+                <a href="{% url 'flight_search' %}" class="btn btn-primary btn-lg">Search Flights</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features text-center mb-5">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm custom-card">
+                    <div class="card-body">
+                        <h2 class="card-title h4">Easy Booking Process</h2>
+                        <p class="card-text">Our booking process is simple and straightforward.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm custom-card">
+                    <div class="card-body">
+                        <h2 class="card-title h4">Wide Selection of Flights</h2>
+                        <p class="card-text">Choose from a variety of flights to different destinations.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm custom-card">
+                    <div class="card-body">
+                        <h2 class="card-title h4">Secure and Reliable Service</h2>
+                        <p class="card-text">Enjoy secure and reliable booking and payment processes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+    <section class="testimonials mb-5">
+        <h2 class="text-center mb-4">What Our Customers Say</h2>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="testimonial text-center border rounded p-4 mb-4">
+                    <blockquote class="blockquote">
+                        <p class="mb-0">"Booking with this service was quick and efficient. I highly recommend it!"</p>
+                    </blockquote>
+                    <p class="customer">- John Doe</p>
+                </div>
+                <div class="testimonial text-center border rounded p-4">
+                    <blockquote class="blockquote">
+                        <p class="mb-0">"I found the best deals on flights here. It saved me a lot of time and money."</p>
+                    </blockquote>
+                    <p class="customer">- Jane Smith</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock content %}

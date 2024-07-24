@@ -69,7 +69,9 @@ pipeline {
                 script {
                     def scannerHome = tool 'SonarQube';
                     withSonarQubeEnv('SonarQube') {
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=SITNFLY -Dsonar.sources=. -Dsonar.host.url=http://192.168.1.9:9000 -Dsonar.login=${SONAR_TOKEN}"
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=SITNFLY -Dsonar.sources=. -Dsonar.host.url=http://192.168.1.9:9000 -Dsonar.login=sqp_8f2e197112a8e14fc388d583127e805db9f19542
+
+"
                     }
                 }
             }

@@ -60,16 +60,16 @@ pipeline {
     stages {
         stage ('Checkout') {
             steps {
-                git branch:'main', url: 'https://github.com/remo11201/sitnflypublic.git'
+                git branch: 'main', url: 'https://github.com/remo11201/sitnflypublic.git'
             }
         }
 
         stage('Code Quality Check via SonarQube') {
             steps {
                 script {
-                def scannerHome = tool 'SonarQube';
+                    def scannerHome = tool 'SonarQube';
                     withSonarQubeEnv('SonarQube') {
-                    sh "/var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarQube/bin/sonar-scanner -Dsonar.projectKey=SITNFLY -Dsonar.sources=. -Dsonar.host.url=http://192.168.1.9:9000 -Dsonar.token=sqp_322b8308a85825b087be4811677d71462f576402"
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=SITNFLY -Dsonar.sources=. -Dsonar.host.url=http://192.168.1.9:9000 -Dsonar.login=${SONAR_TOKEN}"
                     }
                 }
             }
@@ -81,4 +81,5 @@ pipeline {
         }
     }
 }
+
 

@@ -60,7 +60,7 @@ pipeline {
     stages {
         stage ('Checkout') {
             steps {
-                git branch:'main', url: 'https://github.com/afiqdanialll/sitnflypublic.git'
+                git branch:'main', url: 'https://github.com/remo11201/sitnflypublic.git'
             }
         }
 
@@ -69,7 +69,7 @@ pipeline {
                 script {
                 def scannerHome = tool 'SonarQube';
                     withSonarQubeEnv('SonarQube') {
-                    sh "/var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarQube/bin/sonar-scanner -Dsonar.projectKey=Sitnfly -Dsonar.sources=. -Dsonar.host.url=http://192.168.86.108:9000 -Dsonar.token=sqp_e8308ae0f5381d2d0d2ab674c2059c25476df7c0"
+                    sh "/var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/SonarQube/bin/sonar-scanner -Dsonar.projectKey=SITNFLY -Dsonar.sources=. -Dsonar.host.url=http://192.168.1.9:9000 -Dsonar.token=sqp_322b8308a85825b087be4811677d71462f576402"
                     }
                 }
             }
